@@ -11,7 +11,7 @@ from app.models import Base
 from app.models.User import User
 
 from dotenv import load_dotenv
-load_dotenv(dotenv_path='../../.env')
+load_dotenv(dotenv_path='.env')
 
 DB_CONNECTION=os.getenv('DB_CONNECTION')
 DB_HOST=os.getenv('DB_HOST')
@@ -20,12 +20,11 @@ DB_PASSWORD=os.getenv('DB_PASSWORD')
 DB_NAME=os.getenv('DB_NAME')
 DB_PORT=os.getenv('DB_PORT')
 
-connector = 'mysqlconnector' if (DB_CONNECTION == 'mysql') else 'null'
-
 SQLALCHEMY_ECHO = True
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_DATABASE_URL = "mysql+mysqlconnector://root:@localhost:3306/testing"
+SQLALCHEMY_DATABASE_URL = f"{DB_CONNECTION}://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
+print(SQLALCHEMY_DATABASE_URL)
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

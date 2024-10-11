@@ -1,27 +1,37 @@
-from fastapi import HTTPException
 from starlette import status
+from starlette.responses import JSONResponse
 
-from app.DTO import CreateUserDto
+from app.dto import CreateUserDto
+from app.dto.LoginUserDto import LoginUserDto
 from app.services import UserService
-from app.utilities import formating
 
 
-async def registerUser(user: CreateUserDto):
-    email = formating.format_string(user.email)
-
-    if not email:
-        raise HTTPException(
-            detail="Email can not be empty",
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
-        )
-
-    if not user.password:
-        raise HTTPException(
-            detail="Password can not be empty",
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
-        )
+async def registerUser(user: CreateUserDto) -> JSONResponse:
 
     # Process Register in UserService
     user = UserService.register(user)
 
-    return user
+    return JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content={
+            "status": "success",
+            "message": "User created successfully",
+            "data": user.toJson()
+        },
+        headers={"Content-Type": "application/json"}
+    )
+
+async def login(body: LoginUserDto):
+
+    token = UserService.login(body=body)
+
+    return JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content={
+            "status": "success",
+            "message": "Login successfully",
+            "token": token,
+            "type": "bearer"
+        },
+        headers={"Content-Type": "application/json"}
+    )

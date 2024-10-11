@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.database.Config import create_tables
+from database.config import create_tables
 
 
 @asynccontextmanager

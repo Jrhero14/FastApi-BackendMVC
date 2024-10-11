@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 
 from app.models.User import User
-from app.database.Config import SessionLocal
+from database.config import SessionLocal
 
 
 def store(name: str, email: str, password: str)-> User:
@@ -30,8 +30,8 @@ def store(name: str, email: str, password: str)-> User:
             detail=str(e))
 
 def getbyid(id: int) -> User:
-    user = SessionLocal.query(User).filter(User.id == id).first()
-    return user
+    with SessionLocal() as session:
+        return session.query(User).filter(User.id == id).first()
 
 def getByEmail(email: str):
     with SessionLocal() as session:

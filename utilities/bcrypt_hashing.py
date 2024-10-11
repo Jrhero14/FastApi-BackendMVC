@@ -1,14 +1,16 @@
 from time import time
 from random import randint
 import os
-
+from dotenv import load_dotenv
 from passlib.context import CryptContext
 
 CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-salt = "5werASwkNPq"
+load_dotenv('.env')
 
-class HashLib:
+salt = os.getenv("HASH_SALT")
+
+class HashingUtils:
     @staticmethod
     def hash(password: str) -> str:
         to_hash = password + salt
