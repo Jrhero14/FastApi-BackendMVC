@@ -1,10 +1,13 @@
+from typing import Annotated
+
 from starlette.responses import JSONResponse
 
 from app.controllers import authController
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 
 from app.dto.CreateUserDto import CreateUserDto
 from app.dto.LoginUserDto import LoginUserDto
+from utilities.jwtUtils import validate_token
 
 router = APIRouter(
     prefix="/api",
@@ -25,3 +28,9 @@ async def registerUser(bodyRequest: CreateUserDto):
 async def login(bodyRequest: LoginUserDto):
     response = await authController.login(body=bodyRequest)
     return response
+
+@router.post("/validate-token", status_code=status.HTTP_200_OK, response_class=JSONResponse, dependencies=[Depends(validate_token)])
+async def login():
+    return {
+        "message": "Token valid"
+    }
