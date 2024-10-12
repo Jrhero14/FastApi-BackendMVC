@@ -33,15 +33,30 @@ def create_access_token(payload: dict, expires_delta: Union[timedelta, None] = N
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def validate_token(token: Annotated[HTTPAuthorizationCredentials, Depends(oauth2_scheme)]):
+def validate_token(payload_return: bool = False, token: Annotated[HTTPAuthorizationCredentials, Depends(oauth2_scheme)] = None):
     try:
         payload = jwt.decode(token.credentials, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: int = payload.get("user_id")
         if user_id is None:
             raise InvalidTokenError
+        if payload_return:
+            return payload
     except InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token Invalid or Expired",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+def refreshJwtToken(token: Annotated[HTTPAuthorizationCredentials, Depends(oauth2_scheme)]):
+    payload = validate_token(payload_return=True, token=token)
+    newToken = create_access_token(payload=payload)
+    raise HTTPException(
+        status_code=status.HTTP_200_OK,
+        detail={
+            "status": "True",
+            "message": "Success Refresh Token",
+            "token": newToken
+        },
+        headers={"WWW-Authenticate": "Bearer"},
+    )

@@ -51,3 +51,9 @@ def login(body: LoginUserDto):
     token = create_access_token(payload={"user_id": user.id}, expires_delta=access_token_expires)
 
     return token
+
+
+def getUsers():
+    # Handle query with User Repository to get All users
+    users = userRepository.getUsers()
+    return users

@@ -6,7 +6,7 @@ from app.dto.LoginUserDto import LoginUserDto
 from app.services import UserService
 
 
-async def registerUser(user: CreateUserDto) -> JSONResponse:
+async def registerUserController(user: CreateUserDto) -> JSONResponse:
 
     # Process Register in UserService
     user = UserService.register(user)
@@ -21,7 +21,7 @@ async def registerUser(user: CreateUserDto) -> JSONResponse:
         headers={"Content-Type": "application/json"}
     )
 
-async def login(body: LoginUserDto):
+async def loginController(body: LoginUserDto):
 
     token = UserService.login(body=body)
 

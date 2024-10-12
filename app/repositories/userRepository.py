@@ -36,3 +36,8 @@ def getbyid(id: int) -> User:
 def getByEmail(email: str):
     with SessionLocal() as session:
         return session.query(User).where(User.email == email).first()
+
+
+def getUsers():
+    with SessionLocal() as session:
+        return session.query(User).all()
