@@ -1,0 +1,11 @@
+uvicorn
+fastapi
+pymysql
+mysqlclient
+mysql-connector-python
+sqlalchemy
+alembic
+pyjwt # jwt
+passlib # bcrypt
+bcrypt # bcrypt
+pydantic[email]
